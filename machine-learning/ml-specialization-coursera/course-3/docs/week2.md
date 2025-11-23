@@ -67,7 +67,9 @@ The objective is to learn the parameters ($\mathbf{w}^{(j)}$ and $b^{(j)}$) for 
 
 * **Individual User Cost:**
 
-  $$J(\mathbf{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i: r(i, j)=1} \left( (\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)}) - y^{(i, j)} \right)^2 + \frac{\lambda}{2} \sum_{k=1}^{n} (w_k^{(j)})^2$$
+  $$
+  J(\mathbf{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i: r(i, j)=1} ((\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)}) - y^{(i, j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n} (w_k^{(j)})^2
+  $$
   
     * The sum $\sum_{i: r(i, j)=1}$ means we only calculate the error for movies that user $j$ has actually rated.
     * The second term is standard regularization to prevent overfitting. (Note: The normalization constant $1/m^{(j)}$ is omitted for convenience, as it doesn't change the parameters at the minimum; <u>for detailed information see Bonus below)</u>.
