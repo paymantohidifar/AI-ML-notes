@@ -28,7 +28,7 @@ The goal is to predict how users would rate movies they haven't yet watched (den
 | **Number of Users** | $n_u$ | In the example, $n_u = 4$ (Alice, Bob, Carol, Dave). |
 | **Number of Items (Movies)** | $n_m$ | In the example, $n_m = 5$. |
 | **Rating Indicator** | $r(i, j)$ | A binary value: $r(i, j) = 1$ if user $j$ has rated movie $i$; $0$ otherwise. |
-| **Actual Rating** | $y^{(i, j)}$ | The rating (0 to 5 stars) given by user $j$ to movie $i$. (E.g., $y^{(3, 2)} = 4$). |
+| **Actual Rating** | $y^{(i, j)}$ | The rating (0 to 5 stars) given by user $j$ to movie $i$. (e.g., $y^{(3, 2)} = 4$). |
 
 ### Next Step
 
@@ -62,10 +62,12 @@ $$\text{Prediction for } y^{(i, j)} = \mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + 
 The objective is to learn the parameters ($\mathbf{w}^{(j)}$ and $b^{(j)}$) for all users simultaneously by minimizing a regularized mean squared error cost function.
 
 * **Cost Function for All Users ($J$):** The cost is the sum of the individual cost functions for every user.
-    $$J(\mathbf{w}^{(1)}, b^{(1)}, \dots, \mathbf{w}^{(n_u)}, b^{(n_u)}) = \sum_{j=1}^{n_u} J(\mathbf{w}^{(j)}, b^{(j)})$$
 
-* **Individual User Cost ($J(\mathbf{w}^{(j)}, b^{(j)})$):**
-    $$J(\mathbf{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i: r(i, j)=1} \left( (\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)}) - y^{(i, j)} \right)^2 + \frac{\lambda}{2} \sum_{k=1}^{n} (w_k^{(j)})^2$$
+  $$J(\mathbf{w}^{(1)}, b^{(1)}, \dots, \mathbf{w}^{(n_u)}, b^{(n_u)}) = \sum_{j=1}^{n_u} J(\mathbf{w}^{(j)}, b^{(j)})$$
+
+* **Individual User Cost:**
+
+  $$J(\mathbf{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i: r(i, j)=1} \left( (\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)}) - y^{(i, j)} \right)^2 + \frac{\lambda}{2} \sum_{k=1}^{n} (w_k^{(j)})^2$$
   
     * The sum $\sum_{i: r(i, j)=1}$ means we only calculate the error for movies that user $j$ has actually rated.
     * The second term is standard regularization to prevent overfitting. (Note: The normalization constant $1/m^{(j)}$ is omitted for convenience, as it doesn't change the parameters at the minimum; <u>for detailed information see Bonus below)</u>.
@@ -79,14 +81,17 @@ The term related to the number of movies rated by user $j$, $m^{(j)}$, is often 
 * The overall goal is to find the parameters ($\mathbf{w}^{(j)}$ and $b^{(j)}$) that minimize the cost function $J$.
 * $1/2m^{(j)}$ is a constant scaling factor determined by the training data.
 * Multiplying or dividing the entire cost function by a positive constant only scales it vertically; it does not change the location of the minimum point (the optimal parameters).
-    $$ \text{arg min}_{\mathbf{w}, b} \left[ J_{\text{original}}(\mathbf{w}, b) \right] = \text{arg min}_{\mathbf{w}, b} \left[ \mathbf{C} \cdot J_{\text{simplified}}(\mathbf{w}, b) \right] \quad \text{where } \mathbf{C} = \frac{1}{2m^{(j)}} \text{ is the constant.}$$
+
+  $$ \text{arg min}_{\mathbf{w}, b} \left[ J_{\text{original}}(\mathbf{w}, b) \right] = \text{arg min}_{\mathbf{w}, b} \left[ \mathbf{C} \cdot J_{\text{simplified}}(\mathbf{w}, b) \right] \quad \text{where } \mathbf{C} = \frac{1}{2m^{(j)}} \text{ is the constant.}$$
 
 #### 2. Simplifies Optimization
+
 * In Gradient Descent, dropping the constant $\frac{1}{2m^{(j)}}$ only scales the magnitude of the gradient. This is compensated for by adjusting the learning rate ($\alpha$).
 * For Collaborative Filtering, the overall cost function $J_{\text{overall}}$ is a sum of individual user costs $J(\mathbf{w}^{(j)}, b^{(j)})$. Using different division factors ($m^{(j)}$) for every user's loss and regularization terms unnecessarily complicates the algebra for joint optimization.
 * Dropping the constant leads to a cleaner, unified cost function primarily focused on minimization.
 
 #### Comparison to Linear Regression (MSE)
+
 The normalization term ($1/m$) is typically retained in standard Linear Regression (Mean Squared Error, MSE) for statistical and practical reasons.
 
 | Context | Purpose of $J$ | Why $1/m$ is Kept/Dropped |
